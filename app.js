@@ -19,7 +19,7 @@ app.get('/apps', (req, res) => {
 
     //require sort to be either by Rating or App
     if (sort) {
-        if (!['rating', 'app'].includes(sort)) {
+        if (!['Rating', 'App'].includes(sort)) {
             return res
                 .status(400)
                 .send('Sort must be one of Rating or App');
@@ -35,20 +35,24 @@ app.get('/apps', (req, res) => {
         };
     };
 
-    let results = apps.map(app => {
-        return app;
-    });
+    let results = apps
 
+    //sort by Rating or App Name
     if (sort) {
         results.sort((a, b) => {
-            return a[sort] > b[sort] ? 1 : a[sort] < b[sort] ? -1 : 0;
+            return a[sort] > b[sort] ? 1 : a[sort] < b[sort] ? -1: 0;
+        })
+    }
+
+    //filter genres
+    if (genres) {
+        results = apps.filter(app => {
+            return app.Genres === genres;
         })
     }
 
     res.json(results);
 });
 
-//Listen on PORT 8000
-app.listen(8000, () => {
-    console.log('Server started on PORT 8000')
-});
+//export to server.js file
+module.exports = app;
